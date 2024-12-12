@@ -1,3 +1,79 @@
+def hairpin_counter(sequence, min_stem=3, min_loop=4, max_loop=9):
+    """
+    Counts the number of potential hairpin structures in a DNA sequence and returns a simple linear
+    representation of the hairpins (stem1(loop)stem2_rc), or None if no hairpins are found.
+
+    Parameters:
+        sequence (str): The DNA sequence to analyze.
+        min_stem (int): Minimum number of bases in the stem for stable hairpin.
+        min_loop (int): Minimum number of bases in the loop.
+        max_loop (int): Maximum number of bases in the loop.
+
+    Returns:
+        tuple: (int, str or None)
+            - The count of potential hairpin structures.
+            - A single string showing the detected hairpins in the format 'stem1(loop)stem2_rc', or None if no hairpins are found.
+    """
+    count = 0
+    seq_len = len(sequence)
+    hairpin_string = ""
+
+    # Iterate through each base to consider it as a start of a stem
+    for i in range(seq_len):
+        # Only consider end points that would fit within the loop constraints
+        for j in range(i + min_stem + min_loop, min(i + min_stem + max_loop + 1, seq_len)):
+            stem1 = sequence[i:i+min_stem]
+            stem2 = sequence[j:j+min_stem]
+
+            # Check if the stems are complementary (reverse complement match)
+            stem2_rc = reverse_complement(stem2)
+
+            if stem1 == stem2_rc:
+                count += 1
+
+                # Extract the loop sequence
+                loop = sequence[i+min_stem:j]
+
+                # Create the linear representation (now correctly reversed for output)
+                hairpin_representation = f"{stem1}({loop}){stem2}"
+
+                # Append the linear hairpin representation to the string
+                hairpin_string += f"Hairpin {count}: {hairpin_representation}\n"
+
+    # Return count and the formatted hairpin string, or None if no hairpins found
+    return count, hairpin_string if count > 0 else None
+
+def calculate_edit_distance(s1, s2):
+    """
+    Compute the edit distance between two strings using a dynamic programming approach based on the Smith-Waterman algorithm for local alignment.
+
+    Parameters:
+        s1 (str): The first string to compare.
+        s2 (str): The second string to compare.
+
+    Returns:
+        int: The edit distance between the two strings, defined as the minimum number of edits (insertions, deletions, or substitutions) required to transform one string into the other.
+    """
+    s1_len = len(s1)
+    s2_len = len(s2)
+    dist = [[0] * (s2_len + 1) for _ in range(s1_len + 1)]
+
+    # Initialize distances for transformations involving empty strings
+    for i in range(s1_len + 1):
+        dist[i][0] = i
+    for j in range(s2_len + 1):
+        dist[0][j] = j
+
+    # Compute distances
+    for i in range(1, s1_len + 1):
+        for j in range(1, s2_len + 1):
+            if s1[i - 1] == s2[j - 1]:
+                dist[i][j] = dist[i - 1][j - 1]
+            else:
+                dist[i][j] = 1 + min(dist[i - 1][j], dist[i][j - 1], dist[i - 1][j - 1])
+
+    return dist[s1_len][s2_len]
+
 def reverse_complement(sequence):
     """
     Calculates the reverse complement of a DNA sequence.
