@@ -131,11 +131,19 @@ class UTRChooser:
     
     def ensure_kozak(self, utr_option, cds):
         #TODO write test for this
-        utr = utr_option.utr
-        print(utr[-1], utr[-3], utr[-5], cds[3:5])
-        if utr[-1] == 'A' and utr[-3] == 'A' and utr[-5] == 'A' and cds[3:5] == 'TC':
-            return True
-        return False
+        utr = utr_option.utr[-6:]
+        seq = utr + cds[:6]
+        for x in range(len(seq)):
+            # highly conserved
+            if self.kozak_seq[x].isupper():
+                if self.kozak_seq[x] != seq[x]:
+                    return False
+            # less conserved, some random chance to pass if not same base
+            if self.kozak_seq[x].islower():
+                if self.kozak_seq[x].upper() != seq[x]:
+                    if random.random() > .3:
+                        return False
+        return True
     
     def all_checkers(self, utr_option):
         utr = utr_option.utr

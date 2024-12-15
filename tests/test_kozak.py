@@ -8,21 +8,23 @@ def utr_chooser():
     return chooser
 
 def test_kozak_no(utr_chooser):
-    utr_option_pass = UTROption(
-    utr="AAACCCA",
-    cds="ATGGCCGCT",
-    gene_name="GeneFail",
-    first_six_aas="MAAR"
-)
-    cds = "ATGGCCGCT"
-    assert utr_chooser.ensure_kozak(utr_option_pass, cds) == False
+    # Test where the UTR and CDS don't match the Kozak sequence
+    utr_option_fail = UTROption(
+        utr="AAACCTA",  # UTR doesn't match, last 'A' is incorrect for Kozak 'A'
+        cds="ATGGCACG",  # CDS doesn't match for the required sequence (first 6 AAs won't match)
+        gene_name="GeneFail",
+        first_six_aas="MAAR"
+    )
+    cds = "ATGGCACG"  # Ensure the CDS sequence doesn't match the Kozak sequence
+    assert utr_chooser.ensure_kozak(utr_option_fail, cds) == False
 
 def test_kozak_yes(utr_chooser):
+    # Test where the UTR and CDS match the Kozak sequence
     utr_option_pass = UTROption(
-    utr="AAACACA",
-    cds="ATGTCCGCT",
-    gene_name="GenePass",
-    first_six_aas="MAAR"
-)
-    cds = "ATGTCCGCT"
+        utr="AAAAAAA",  # UTR matches Kozak sequence: 'A' at the uppercase positions, 'a' at the flexible ones
+        cds="ATGTCCG",  # CDS matches Kozak sequence: 'T' and 'C' at positions 4 and 5
+        gene_name="GenePass",
+        first_six_aas="MAAR"
+    )
+    cds = "ATGTCTG"  # Ensure the CDS sequence matches the required pattern in the Kozak sequence
     assert utr_chooser.ensure_kozak(utr_option_pass, cds) == True
