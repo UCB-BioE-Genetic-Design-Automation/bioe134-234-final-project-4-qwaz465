@@ -2,6 +2,7 @@ from genome_data_parsing import *
 from bio_functions import *
 from dataclasses import dataclass
 import random
+from checkers.forbidden_sequence_checker import ForbiddenSequenceChecker
 
 @dataclass(frozen=True)
 class UTROption:
@@ -29,6 +30,7 @@ class UTRChooser:
     
     def initiate(self):
         self.seq_checker = ForbiddenSequenceChecker()
+        self.seq_checker.initiate()
         genbank = 'data/genomic.gbff'
         genes_info = extract_genes_info(genbank)
         file_path = 'data/4932-WHOLE_ORGANISM-integrated.txt'
@@ -99,7 +101,10 @@ class UTRChooser:
             # check restriction sites
 
             # if 5' end and doesnt have kozak, skip 
-            if end == 5 and not self.ensure_kozak(utr_option):
+            if end == 5 and not self.ensure_kozak(utr_option, cds):
+                continue
+
+            if not self.all_checkers(utr_option):
                 continue
             # Calculate the edit distance between input CDS first six AAs and utr option first six AAs
             edit_distance = calculate_edit_distance(input_first_six_aas, utr_option.first_six_aas)
@@ -121,18 +126,17 @@ class UTRChooser:
 
         return best_utr
     
-    def ensure_kozak(self, utr_option):
+    def ensure_kozak(self, utr_option, cds):
         #TODO write test for this
         utr = utr_option.utr
-        cds = utr_option.cds
         print(utr[-1], utr[-3], utr[-5], cds[3:5])
         if utr[-1] == 'A' and utr[-3] == 'A' and utr[-5] == 'A' and cds[3:5] == 'TC':
             return True
         return False
     
-    def checkers(self, utr_option):
+    def all_checkers(self, utr_option):
         utr = utr_option.utr
+        return self.seq_checker.run(utr)
 
-#TODO integrate ensure kozak into run for 5' utr, then run again for 3' without checking for kozak seq, but what else to check? 
-#TODO add hairpin / edit dist funcs and other metrics to use
+#TODO integrate randomness into kozak checker for lowercase parts
 #TODO write benchmarker to see if good?
