@@ -28,6 +28,7 @@ class UTRChooser:
         random.seed(1738)
     
     def initiate(self):
+        self.seq_checker = ForbiddenSequenceChecker()
         genbank = 'data/genomic.gbff'
         genes_info = extract_genes_info(genbank)
         file_path = 'data/4932-WHOLE_ORGANISM-integrated.txt'
@@ -95,6 +96,8 @@ class UTRChooser:
         best_score = float('inf')  # Start with a very high score
 
         for utr_option in valid_utr_options:
+            # check restriction sites
+
             # if 5' end and doesnt have kozak, skip 
             if end == 5 and not self.ensure_kozak(utr_option):
                 continue
@@ -126,5 +129,10 @@ class UTRChooser:
         if utr[-1] == 'A' and utr[-3] == 'A' and utr[-5] == 'A' and cds[3:5] == 'TC':
             return True
         return False
+    
+    def checkers(self, utr_option):
+        utr = utr_option.utr
+
 #TODO integrate ensure kozak into run for 5' utr, then run again for 3' without checking for kozak seq, but what else to check? 
 #TODO add hairpin / edit dist funcs and other metrics to use
+#TODO write benchmarker to see if good?

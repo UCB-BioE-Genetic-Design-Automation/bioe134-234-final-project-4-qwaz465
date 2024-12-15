@@ -1,7 +1,5 @@
 import pytest
 from design_utr import *
-import genome_data_parsing
-import bio_functions
 
 @pytest.fixture
 def utr_chooser():
