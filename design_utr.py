@@ -27,6 +27,7 @@ class UTRChooser:
         self.kozak_seq = 'aAaAaAATGTCt'
         self.ends = [3,5]
         random.seed(1738)
+        self.poly_a_tail_length = 15  # Default length of poly-A tail
     
     def initiate(self):
         self.seq_checker = ForbiddenSequenceChecker()
@@ -91,8 +92,7 @@ class UTRChooser:
             raise ValueError("No valid utr options remain after applying the ignore filter.")
 
         # Initialize the Translate object and translate the first 6 amino acids of the input CDS
-        translator = self.translator
-        input_first_six_aas = translator.run(cds[:18])  # 18 bases for 6 amino acids
+        input_first_six_aas = translate(cds[:18])  # 18 bases for 6 amino acids
 
         best_utr = None
         best_score = float('inf')  # Start with a very high score
@@ -123,6 +123,9 @@ class UTRChooser:
             if score < best_score:
                 best_score = score
                 best_utr = utr_option
+        # If selecting a 3' UTR, append the poly-A tail
+        if end == 3 and best_utr:
+            best_utr.utr += 'A' * self.poly_a_tail_length  # Append poly-A tail to 3' UTR
 
         return best_utr
     
@@ -140,3 +143,28 @@ class UTRChooser:
 
 #TODO integrate randomness into kozak checker for lowercase parts
 #TODO write benchmarker to see if good?
+# Example usage of UTRChooser class
+
+# Create an instance of the UTRChooser
+utr_chooser = UTRChooser()
+
+# Initialize the UTRChooser (this loads the genomic data and prepares UTR options)
+utr_chooser.initiate()
+
+# Example of using the run method to choose the best UTR for a given CDS
+# Assuming we have a CDS sequence, for example, from a gene
+cds_sequence = "ATGACCGTACGCTGGAAGGACTGG"  # Sample CDS sequence
+end = 5  # We are looking for a 5' UTR
+ignores = []  # No UTR options to ignore for this example
+
+# Run the method to choose the best UTR
+best_utr_option = utr_chooser.run(cds_sequence, end, ignores)
+
+# Output the chosen UTR Option
+if best_utr_option:
+    print(f"Best UTR Option for CDS {cds_sequence}:")
+    print(f"Gene Name: {best_utr_option.gene_name}")
+    print(f"UTR: {best_utr_option.utr}")
+    print(f"First Six Amino Acids: {best_utr_option.first_six_aas}")
+else:
+    print("No suitable UTR option found.")

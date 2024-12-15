@@ -1,29 +1,67 @@
 from Bio.Seq import Seq
 from Bio.SeqUtils import MeltingTemp as mt
+from bio_functions import *
 class PrimerDesigner:
     # cut out cds's from utr genes and only take utrs from them
-    # also uae specifically 1 cloning tech for nowwwww
+    # also use specifically 1 cloning tech for nowwwww
+    #currently for golden gate
+    def __init__(self):
+        self.enzyme_dict = {}
+        self.overhangs = tuple()
+
     def initiate(self):
         self.tm_target = 60
         self.primer_length = 20
-    def run(self, cds, utr5, utr3, cloning_site):
+        self.enzyme_dict = {
+            "BsaI": "GGTCTC",
+            "BsmBI": "CGTCTC",
+            "BbsI": "GAAGAC",
+            "Esp3I": "GCGGCC",
+            "AarI": "CACCTGC",
+            "SapI": "GCTCTTC"
+        }
+        self.overhangs = ("AGCT", "TCGA")
+    def run(self, cds, utr5, utr3, enzyme):
+        if enzyme not in self.enzyme_dict:
+            raise ValueError(f"Unsupported enzyme: {enzyme}. Please choose from: {list(self.enzyme_dict.keys())}")
         # Generate the forward primer
+        # Prepare full sequence
         full_sequence = utr5 + cds + utr3
-        forward_primer_core = full_sequence[:self.primer_length]
-        while mt.Tm_NN(forward_primer_core) < self.tm_target and len(forward_primer_core) < len(full_sequence):
-            forward_primer_core += full_sequence[len(forward_primer_core)]
-        forward_primer = forward_primer_core
+        cloning_site = self.enzyme_dict[enzyme]
 
-        # Add cloning site 
-        forward_primer = cloning_site + forward_primer
+        # Forward primer: Overhang + Cloning site + Start of the sequence
+        forward_primer_core = self._adjust_primer_length(full_sequence[:self.primer_length])
+        forward_primer = self.overhangs[0] + cloning_site + forward_primer_core
 
-        # Generate the reverse primer (complement of the reverse strand)
-        reverse_primer_core = Seq(full_sequence[-self.primer_length:]).reverse_complement()
-        while mt.Tm_NN(reverse_primer_core) < self.tm_target and len(reverse_primer_core) < len(full_sequence):
-            reverse_primer_core = Seq(full_sequence[-(len(reverse_primer_core) + 1):]).reverse_complement()
-        reverse_primer = str(reverse_primer_core)
+        # Reverse primer: Overhang + Cloning site + Reverse complement of the end of the sequence
+        reverse_primer_core = self._adjust_primer_length(full_sequence[-self.primer_length:])
+        reverse_primer_core_rc = reverse_complement(reverse_primer_core)
+        reverse_primer = self.overhangs[1] + cloning_site + reverse_primer_core_rc
 
-        # Add cloning site
-        reverse_primer = cloning_site + reverse_primer
-
-        return forward_primer, reverse_primer
+        return {
+            "forward_primer": forward_primer,
+            "reverse_primer": reverse_primer
+        }
+    
+    def _adjust_primer_length(self, sequence):
+        """Adjust the primer length to match the target Tm."""
+        length = self.primer_length
+        while length < len(sequence):
+            tm = mt.Tm_NN(sequence[:length])
+            if tm >= self.tm_target:
+                return sequence[:length]
+            length += 1
+        return sequence
+    
+    # Example usage:
+designer = PrimerDesigner(
+    cds="ATGACCTGACTGA",
+    utr5="TTTAAA",
+    utr3="TTTCCC",
+    tm_target=60,
+    primer_length=20,
+    enzyme="BsaI",
+    overhangs=("AGCT", "TCGA")
+)
+primers = designer.run()
+print(primers)

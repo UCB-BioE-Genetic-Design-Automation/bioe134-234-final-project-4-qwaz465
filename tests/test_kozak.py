@@ -14,7 +14,8 @@ def test_kozak_no(utr_chooser):
     gene_name="GeneFail",
     first_six_aas="MAAR"
 )
-    assert utr_chooser.ensure_kozak(utr_option_pass) == False
+    cds = "ATGGCCGCT"
+    assert utr_chooser.ensure_kozak(utr_option_pass, cds) == False
 
 def test_kozak_yes(utr_chooser):
     utr_option_pass = UTROption(
@@ -23,4 +24,5 @@ def test_kozak_yes(utr_chooser):
     gene_name="GenePass",
     first_six_aas="MAAR"
 )
-    assert utr_chooser.ensure_kozak(utr_option_pass) == True
+    cds = "ATGTCCGCT"
+    assert utr_chooser.ensure_kozak(utr_option_pass, cds) == True

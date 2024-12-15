@@ -11,8 +11,6 @@ class ForbiddenSequenceChecker:
     "CCCCCCCC",  # poly(C)
     "GGGGGGGG",  # poly(G)
     "ATATATAT",  # poly(AT)
-    "GUAAGU",    # Splice donor site (cryptic)
-    "CAG",       # Splice acceptor site (cryptic)
     "GGGGGG",    # G-quadruplex motif
     "ATATATATATAT",  # AT-rich region (over 75% AT)
     "TTTTTTTTTT",  # Repetitive T's
@@ -23,9 +21,6 @@ class ForbiddenSequenceChecker:
     "GGAGGGGAGAG", # Ty1 Transposon sequence
     "TGAGGGGG",  # LTR sequence
     "AGGAGG",    # Shine-Dalgarno-like sequence
-    "TAG",       # Stop codon
-    "TAA",       # Stop codon
-    "TGA",       # Stop codon
     "CAATTG",    # MfeI
     "GAATTC",    # EcoRI
     "GGATCC",    # BamHI
@@ -49,6 +44,7 @@ class ForbiddenSequenceChecker:
 
         for site in self.forbidden:
             if site in combined:
+                print(site)
                 return False
 
         return True
