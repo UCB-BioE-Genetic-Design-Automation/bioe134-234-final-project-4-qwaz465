@@ -71,6 +71,103 @@
       "expected_response": {
         "sequence": "MR"
       }
+    },
+    {
+      "request": "make a 5' UTR for yeast CDS 'ATGTCTGCGGGCGCTCGTTCGAGTATAATC'",
+      "expected_call": {
+        "function_id": "org.c9.function.bioe_134.UTRChooser.run.best_utr_selection.v1",
+        "arguments": {
+          "sequence": "ATGTCTGCGGGCGCTCGTTCGAGTATAATC",
+          "end": "5",
+          "ignores": "set()"
+        }
+      },
+      "expected_response": {
+        "type": "UTROption"
+      }
+    },
+    {
+      "request": "can i get UTR with a poly(A) tail attached for yeast CDS 'ATGTCTGCGGGCGCTCGTTCGAGTATAATC'",
+      "expected_call": {
+        "function_id": "org.c9.function.bioe_134.UTRChooser.run.best_utr_selection.v1",
+        "arguments": {
+          "sequence": "ATGTCTGCGGGCGCTCGTTCGAGTATAATC",
+          "end": "3",
+          "ignores": "set()"
+        }
+      },
+      "expected_response": {
+        "type": "UTROption"
+      }
+    },
+    {
+      "request": "Design primers for the given coding sequence 'ATGACCTGACTGA' with the 5' UTR 'TTTAAA' and 3' UTR 'TTTCCC' using the Golden Gate method with BsaI enzyme.",
+  "expected_call": {
+    "function_id": "org.c9.function.bioe_134.PrimerDesigner.run.design_primers.v1",
+    "arguments": {
+      "cds": "ATGACCTGACTGA",
+      "utr5": "TTTAAA",
+      "utr3": "TTTCCC",
+      "enzyme": "BsaI",
+      "method": "Golden Gate"
+    }
+  },
+  "expected_response": {
+    "primers": {
+      "forward_primer": "AGCTGGTCTCTTTAAAATGACCTGACTGAT",
+      "reverse_primer": "TCGAGGTCTCGGGAAATCAGTCAGGTCATT"
+    }
+  }
+    },
+    {
+      "request": "i want primers for cds 'ATGACCTGACTGA' with 5' utr 'TTTAAA' and 3' utr 'TTTCCC' for gibson assembly",
+      "expected_call": {
+        "function_id": "org.c9.function.bioe_134.PrimerDesigner.run.design_primers.v1",
+        "arguments": {
+          "cds": "ATGACCTGACTGA",
+          "utr5": "TTTAAA",
+          "utr3": "TTTCCC",
+          "method": "Gibson"
+        }
+      },
+      "expected_response": {
+        "primers": {
+          "forward_primer": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAATTTAAAATGACCTGACTGAT",
+          "reverse_primer": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTGGGAAATCAGTCAGGTCATT"
+        }
+      }
+    },
+    {
+      "request": "make a utr that has a valid kozak sequence for cds 'ATGTCTGCGGGCGCTCGTTCGAGTATAATC'",
+      "expected_call": {
+        "function_id": "org.c9.function.bioe_134.UTRChooser.run.best_utr_selection.v1",
+        "arguments": {
+          "sequence": "ATGTCTGCGGGCGCTCGTTCGAGTATAATC",
+          "end": "5",
+          "ignores": "set()"
+        }
+      },
+      "expected_response": {
+        "type": "UTROption"
+      }
+    },
+    {
+      "request": "i want primers for cds 'ATGACCTGACTGA' with 5' utr 'TTTAAA' and 3' utr 'TTTCCC' without any restriction enzymes",
+      "expected_call": {
+        "function_id": "org.c9.function.bioe_134.PrimerDesigner.run.design_primers.v1",
+        "arguments": {
+          "cds": "ATGACCTGACTGA",
+          "utr5": "TTTAAA",
+          "utr3": "TTTCCC",
+          "method": "Gibson"
+        }
+      },
+      "expected_response": {
+        "primers": {
+          "forward_primer": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAATTTAAAATGACCTGACTGAT",
+          "reverse_primer": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTGGGAAATCAGTCAGGTCATT"
+        }
+      }
     }
   ]
 }
