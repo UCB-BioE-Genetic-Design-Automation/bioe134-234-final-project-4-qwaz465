@@ -36,9 +36,9 @@ class PrimerDesigner:
         }
         self.overhangs = ("AGCT", "TCGA")  # Default overhang sequences
         self.homology_length = 30           # Default homology length for Gibson Assembly
-        self.methods = ['Gibson', 'Golden Gate']
+        self.methods = ['Golden Gate', 'Gibson']
 
-    def run(self, cds, utr5, utr3, enzyme=None, method="Golden Gate"):
+    def run(self, cds, utr5, utr3, enzyme=None, method="Gibson"):
         """
         Generate primers for a given sequence using the selected cloning method.
 

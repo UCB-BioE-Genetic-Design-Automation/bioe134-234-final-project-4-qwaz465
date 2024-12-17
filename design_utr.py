@@ -82,7 +82,7 @@ class UTRChooser:
                 )
                 self.utrOptions.append(utr_option)
 
-    def run(self, cds, end, ignores):
+    def run(self, cds, end, ignores = set()):
         """
         Selects the best UTR option for a given coding sequence (CDS) based on scoring criteria.
 
@@ -123,7 +123,7 @@ class UTRChooser:
                 kozak_compliant_found = kozak_compliant_found or is_kozak_compliant
                 if not is_kozak_compliant:
                     continue  # Skip options that do not meet Kozak sequence criteria
-            if not self.all_checkers(utr_option):
+            if not self.forbidden_seq_check(utr_option):
                 continue  # Skip options failing forbidden sequence checks
 
             edit_distance = calculate_edit_distance(input_first_six_aas, utr_option.first_six_aas)
@@ -172,7 +172,7 @@ class UTRChooser:
                     return False
         return True
     
-    def all_checkers(self, utr_option):
+    def forbidden_seq_check(self, utr_option):
         """
         Validates the UTR sequence against forbidden sequence checks.
 
@@ -180,6 +180,6 @@ class UTRChooser:
             utr_option (UTROption): The UTR option to validate.
 
         Returns:
-            bool: True if the sequence passes all checks, False otherwise.
+            bool: True if the sequence passes the forbidden sequence checks, False otherwise.
         """
         return self.seq_checker.run(utr_option.utr)
