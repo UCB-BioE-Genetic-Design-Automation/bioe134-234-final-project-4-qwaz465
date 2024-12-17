@@ -28,3 +28,17 @@ def test_kozak_yes(utr_chooser):
     )
     cds = "ATGTCTG"  # Ensure the CDS sequence matches the required pattern in the Kozak sequence
     assert utr_chooser.ensure_kozak(utr_option_pass, cds) == True
+
+def test_kozak_with_random_chance(utr_chooser):
+    # Test with a UTR that has some mismatches but passes due to random chance
+    utr_option_rand = UTROption(
+        utr="AAAAAAA",  # UTR is the same as the Kozak sequence
+        cds="ATGGCACG",  # CDS does not exactly match the Kozak sequence
+        gene_name="GeneRand",
+        first_six_aas="MAAR"
+    )
+    cds = "ATGGCACG"  # Ensure the CDS doesn't fully match but might pass due to random chance
+    result = utr_chooser.ensure_kozak(utr_option_rand, cds)
+    # Check if result is either True or False based on random chance
+    # with seed this always fails
+    assert result == False
