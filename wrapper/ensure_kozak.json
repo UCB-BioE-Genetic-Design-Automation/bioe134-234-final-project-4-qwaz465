@@ -1,0 +1,59 @@
+{
+    "id": "org.c9.function.bioe_134.UTRChooser.ensure_kozak.validation.v1",
+    "name": "Kozak Sequence Validator",
+    "description": "Validates if a given UTR sequence ends with a Kozak-like sequence before the start codon of a CDS.",
+    "type": "function",
+    "keywords": ["Kozak sequence", "UTR validation", "start codon", "translation initiation", "5' UTR", "protein regulation", "ribosome assembly"],
+    "date_created": "2024-12-16",
+    "date_last_modified": "2024-12-16",
+    "inputs": [
+      {
+        "name": "utr_option",
+        "type": "UTROption",
+        "description": "An instance of the UTROption class, containing the UTR and associated metadata."
+      },
+      {
+        "name": "cds",
+        "type": "string",
+        "description": "The coding sequence to validate against the Kozak sequence."
+      }
+    ],
+    "outputs": [
+      {
+        "type": "boolean",
+        "description": "True if the UTR ends with a valid Kozak sequence before the CDS, False otherwise."
+      }
+    ],
+    "examples": [
+      {
+        "input": {
+          "utr_option": {
+            "utr": "GCCACCATGG",
+            "cds": "ATGAGTCAAG",
+            "gene_name": "example_gene",
+            "first_six_aas": "MSSK"
+          },
+          "cds": "ATGAGTCAAG"
+        },
+        "output": true
+      },
+      {
+        "input": {
+          "utr_option": {
+            "utr": "GCGCGTATGG",
+            "cds": "ATGAGTCAAG",
+            "gene_name": "example_gene",
+            "first_six_aas": "MSSK"
+          },
+          "cds": "ATGAGTCAAG"
+        },
+        "output": false
+      }
+    ],
+    "execution_details": {
+      "language": "Python",
+      "source": "design_utr.py",
+      "execution": "UTRChooser.ensure_kozak(utr_option, cds)"
+    }
+  }
+  

@@ -1,0 +1,51 @@
+{
+    "id": "org.c9.function.bioe_134.UTRChooser.run.best_utr_selection.v1",
+    "name": "UTR Designer",
+    "description": "Selects the best UTR option for a given coding sequence (CDS) based on scoring criteria. The data being used is taken specifically from Saccharomyces cerevisiae",
+    "type": "function",
+    "keywords": ["UTR selection", "CDS", "best UTR", "UTRChooser", "UTR", "Kozak", "Polyadenylation", "Poly(A) tail", "Yeast", "S. cerevisiae"],
+    "date_created": "2024-12-16",
+    "date_last_modified": "2024-12-16",
+    "inputs": [
+      {
+        "name": "cds",
+        "type": "string",
+        "description": "The coding sequence for which the UTR is being chosen."
+      },
+      {
+        "name": "end",
+        "type": "integer",
+        "description": "Specifies 5' or 3' UTR (use 5 or 3)."
+      },
+      {
+        "name": "ignores",
+        "type": "set",
+        "description": "A set of UTROption instances to exclude from selection."
+      }
+    ],
+    "outputs": [
+      {
+        "type": "UTROption",
+        "description": "The best UTR option for the given CDS."
+      }
+    ],
+    "examples": [
+      {
+        "input": {
+          "cds": "ATGAGTCAAGGCGGAAGAG",
+          "end": 3,
+          "ignores": ["UTROption1", "UTROption2"]
+        },
+        "output": {
+          "type": "UTROption",
+          "description": "Best UTR option for the provided CDS excluding specified options."
+        }
+      }
+    ],
+    "execution_details": {
+      "language": "Python",
+      "source": "design_utr.py",
+      "execution": "UTRChooser.run(cds, end, ignores)"
+    }
+  }
+  

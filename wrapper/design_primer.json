@@ -1,0 +1,87 @@
+{
+    "id": "org.c9.function.bioe_134.PrimerDesigner.run.design_primers.v1",
+    "name": "Primer Designer",
+    "description": "Generates forward and reverse primers for molecular cloning experiments using either Golden Gate or Gibson Assembly. Designed specifically for Saccharomyces cerevisiae sequences.",
+    "type": "function",
+    "keywords": ["primer design", "Golden Gate", "Gibson Assembly", "molecular cloning", "restriction enzyme", "homology region", "primer optimization", "bioinformatics", "S. cerevisiae"],
+    "date_created": "2024-12-16",
+    "date_last_modified": "2024-12-16",
+    "inputs": [
+      {
+        "name": "cds",
+        "type": "string",
+        "description": "Coding sequence for which primers are being designed."
+      },
+      {
+        "name": "utr5",
+        "type": "string",
+        "description": "5' UTR sequence to include in primer design."
+      },
+      {
+        "name": "utr3",
+        "type": "string",
+        "description": "3' UTR sequence to include in primer design."
+      },
+      {
+        "name": "enzyme",
+        "type": "string",
+        "description": "Restriction enzyme for Golden Gate cloning. Required only for Golden Gate method."
+      },
+      {
+        "name": "method",
+        "type": "string",
+        "description": "Cloning method to use: 'Golden Gate' or 'Gibson'."
+      }
+    ],
+    "outputs": [
+      {
+        "type": "object",
+        "description": "A dictionary containing forward and reverse primers.",
+        "fields": [
+          {
+            "name": "forward_primer",
+            "type": "string",
+            "description": "The designed forward primer sequence."
+          },
+          {
+            "name": "reverse_primer",
+            "type": "string",
+            "description": "The designed reverse primer sequence."
+          }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "input": {
+          "cds": "ATGACCTGACTGA",
+          "utr5": "TTTAAA",
+          "utr3": "TTTCCC",
+          "enzyme": "BsaI",
+          "method": "Golden Gate"
+        },
+        "output": {
+          "forward_primer": "AGCTGGTCTCTTTAAAATGACCTGACTGAT",
+          "reverse_primer": "TCGAGGTCTCGGGAAATCAGTCAGGTCATT"
+        }
+      },
+      {
+        "input": {
+          "cds": "ATGACCTGACTGA",
+          "utr5": "TTTAAA",
+          "utr3": "TTTCCC",
+          "method": "Gibson"
+        },
+        "output": {
+          "forward_primer": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAATTTAAAATGACCTGACTGAT",
+          "reverse_primer": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTGGGAAATCAGTCAGGTCATT"
+        }
+      }
+    ],
+    "execution_details": {
+      "language": "Python",
+      "source": "design_primer.py",
+      "execution": "PrimerDesigner.run(cds, utr5, utr3, enzyme, method)"
+    }
+  }
+  

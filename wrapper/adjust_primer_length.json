@@ -1,0 +1,42 @@
+{
+    "id": "org.c9.function.bioe_134.PrimerDesigner.adjust_primer_length.optimize_tm.v1",
+    "name": "Primer Length Adjuster",
+    "description": "Adjusts the length of a primer sequence to achieve the target melting temperature (Tm).",
+    "type": "function",
+    "keywords": ["primer length", "melting temperature", "Tm optimization", "sequence trimming", "primer design", "bioinformatics"],
+    "date_created": "2024-12-16",
+    "date_last_modified": "2024-12-16",
+    "inputs": [
+      {
+        "name": "sequence",
+        "type": "string",
+        "description": "The input nucleotide sequence to be adjusted."
+      }
+    ],
+    "outputs": [
+      {
+        "type": "string",
+        "description": "The adjusted sequence meeting the target Tm."
+      }
+    ],
+    "examples": [
+      {
+        "input": {
+          "sequence": "ATGACCTGACTGACTGACTGACTG"
+        },
+        "output": "ATGACCTGACTGACTGA"
+      },
+      {
+        "input": {
+          "sequence": "GCGGATCCGGTACCGTCTAGA"
+        },
+        "output": "GCGGATCCGGTACC"
+      }
+    ],
+    "execution_details": {
+      "language": "Python",
+      "source": "design_primer.py",
+      "execution": "PrimerDesigner._adjust_primer_length(sequence)"
+    }
+  }
+  

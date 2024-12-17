@@ -1,0 +1,49 @@
+{
+    "id": "org.c9.function.bioe_134.PrimerDesigner.add_homology_region.gibson_assembly.v1",
+    "name": "Homology Region Adder",
+    "description": "Adds homology regions to primers for Gibson Assembly, based on the region type (upstream or downstream).",
+    "type": "function",
+    "keywords": ["homology region", "primer design", "Gibson Assembly", "upstream homology", "downstream homology", "molecular cloning", "bioinformatics"],
+    "date_created": "2024-12-16",
+    "date_last_modified": "2024-12-16",
+    "inputs": [
+      {
+        "name": "region_type",
+        "type": "string",
+        "description": "The type of homology region to add ('upstream' or 'downstream')."
+      },
+      {
+        "name": "primer_core",
+        "type": "string",
+        "description": "The core primer sequence to which the homology region will be added."
+      }
+    ],
+    "outputs": [
+      {
+        "type": "string",
+        "description": "The primer sequence with the added homology region."
+      }
+    ],
+    "examples": [
+      {
+        "input": {
+          "region_type": "upstream",
+          "primer_core": "ATGACCTGACTGA"
+        },
+        "output": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAATGACCTGACTGA"
+      },
+      {
+        "input": {
+          "region_type": "downstream",
+          "primer_core": "GCGGATCCGGTACC"
+        },
+        "output": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTGCGGATCCGGTACC"
+      }
+    ],
+    "execution_details": {
+      "language": "Python",
+      "source": "design_primer.py",
+      "execution": "PrimerDesigner._add_homology_region(region_type, primer_core)"
+    }
+  }
+  
